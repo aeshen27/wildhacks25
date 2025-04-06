@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block sidebar %}
+    <h3>Commodities</h3>
+    <div class="sidebar-list">
+    {% for item in commodities %}
+        <a href="{{ url_for('show_commodity', selected_id=item.id) }}"
+        class="sidebar-item {% if selected_symbol == item.id|string %}active{% endif %}">
+        {{ item.name }}
+        </a>
+    {% endfor %}
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="content-grid">
+    <div class="commodity-stats">
+        <h2>{{ stock_data.name }}</h2>
+        <p><strong>Total US Production (2024): </strong>{{ "{:,.1f}".format(stock_data.total_volume).rstrip('0').rstrip('.') }} Metric Tons</p>
+        <p><strong>Percentage Exported:</strong> {{"{:.2f}%".format((stock_data.export_volume/stock_data.total_volume) * 100)}}</p>
+        <p><strong>Export Value: </strong>${{ "{:,.1f}".format(stock_data.export_value / 1000).rstrip('0').rstrip('.') }} M</p>
+        <p><strong>Exported Volume: </strong>{{ "{:,.1f}".format(stock_data.export_volume).rstrip('0').rstrip('.') }} Metric Tons</p>
+    </div>
+    <div class="top-exporters">
+        <h3>Top Countries Exported To</h3>
+        <ol>
+            {% for country in top_five %}
+                <li>
+                    <a href="{{ url_for('show_country_news', selected_id=selected_symbol, country_name=country.name) }}">
+                        {{ country.name }}
+                    </a> — ${{ "{:,.0f}".format(country.export_amount/1000) }}M
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+    <h2>{{ stock_data.name }} Trends</h2>
+    <div class="plot-gallery">
+        <img src="{{ url_for('static', filename='images/' ~stock_data.image_url)}}" alt="{{ stock_data.name }} image" class="commodity-image">
+    </div>
+    <div class="news-section">
+        <h2>Related News</h2>
+        {% for article in news %}
+        <div class="news-item">
+            <h3>
+                <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
+            </h3>
+            <p>{{ article.description }}</p>
+            <p><small>{{ article.publishedAt }}</small></p>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
