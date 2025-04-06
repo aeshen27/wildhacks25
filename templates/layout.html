@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Commodity Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="main-header">
+        <h1>Welcome to the Commodity Dashboard</h1>
+    </header>
+    <div class="container">
+        <div class="sidebar">
+            {% block sidebar %}{% endblock %}
+        </div>
+        <div class="main-panel">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>
